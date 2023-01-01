@@ -13,8 +13,8 @@ class VideoGet:
         self.stream.set(cv2.CAP_PROP_BUFFERSIZE, 2)
         time.sleep(2.0)
 
-        self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 1024)
-        self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 768)
+        self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
         (self.grabbed, self.frame) = self.stream.read()
 

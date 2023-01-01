@@ -13,13 +13,14 @@ class CountdownTimer:
     def __init__(self, ui, countdown_start):
         self.countdown_start = countdown_start
         self.stopped = False
-        self.reset()
-        self.ui = ui        
+        self.ui = ui 
 
     def reset(self):
         self._start_time = datetime.now()
+        self.ui.update_time(self.time_label())
 
     def start(self):
+        self.reset()
         Thread(target=self.get, args=()).start()
         return self
 
