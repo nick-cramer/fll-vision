@@ -10,12 +10,15 @@ class RecordingManager:
         print('startNewRecording')
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         self.foutw = cv2.VideoWriter('output-wide.mp4', fourcc, 20.0, (1920, 1080))
-        self.foutz = cv2.VideoWriter('output-zoom.mp4', fourcc, 20.0, (690, 690))
+        self.foutz = cv2.VideoWriter('output-zoom.mp4', fourcc, 20.0, (400, 400))
         self.isRecording = True
         
     def writeFrame(self, frameFullRes, frameCropped):
         self.foutw.write(frameFullRes)
-        self.foutz.write(frameCropped)
+        if frameCropped.shape[0] == 400 and frameCropped.shape[1] == 400:
+            self.foutz.write(frameCropped)
+        else:
+            print('cropped wrong dimensions')
         
     def stopRecording(self):
         print('stopRecording')

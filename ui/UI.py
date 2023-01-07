@@ -18,14 +18,17 @@ class UI:
     def startInstantReplayMode(self):
         self.countdown_timer.stop()
         self.rec_mgr.stopRecording()
+        self.replay_getter.open()
+
 
 
     def resetMode(self):
         self.countdown_timer.reset()
+        self.replay_getter.close()
 
 
-    def button_start(self):
-        print("Start!")
+    def button_press(self):
+        print("button_press!")
         if self.mode == 'READY':
             self.gobutton.config(text='Stop')
             self.startRecordingMode()
@@ -39,13 +42,14 @@ class UI:
             self.resetMode()
             self.mode = 'READY'
 
-    def init(self, video_getter, countdown_timer, rec_mgr, robot_tracker):
+    def init(self, video_getter, countdown_timer, rec_mgr, robot_tracker, replay_getter):
     
         self.webcam = video_getter
         self.zoomh = video_getter.zoomh
         self.countdown_timer = countdown_timer
         self.rec_mgr = rec_mgr
         self.robot_tracker = robot_tracker
+        self.replay_getter = replay_getter
 
 
 
@@ -59,7 +63,7 @@ class UI:
         self.vidmain = Label(app, width=1230, height=690, borderwidth=1, relief="solid")
         self.vidzoom = Label(app, width=690, height=690, borderwidth=1, relief="solid")
 
-        self.gobutton = Button(app, text="Start", width=20, command=self.button_start)
+        self.gobutton = Button(app, text="Start", width=20, command=self.button_press)
 
         history = Listbox(self.runsview)
         history.insert(1, "Current Activity")
@@ -109,13 +113,17 @@ class UI:
         self.vidmain.configure(image=imgtk)
 
 
-    def show_frame(self, video_getter):
+    def show_frame_loop(self, video_getter, replay_getter):
 
-        cv2image = video_getter.frame    
-        cropped = self.robot_tracker.crop_to_robot(cv2image, video_getter)
-        self.display(cv2image, cropped)
-        
-        self.root.after(100, self.show_frame, video_getter)
+        if self.mode == 'REPLAYING':
+            frameFullRes = replay_getter.getNextFullResFrame()
+            frameCropped = replay_getter.getNextCroppedFrame()
+        else:
+            frameFullRes = video_getter.frame
+            frameCropped = self.robot_tracker.crop_to_robot(frameFullRes, video_getter)
+
+        self.display(frameFullRes, frameCropped)        
+        self.root.after(100, self.show_frame_loop, video_getter, replay_getter)
 
     def update_time(self, time_label):
         self.timer.config(text=time_label)

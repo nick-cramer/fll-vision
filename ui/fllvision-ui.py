@@ -9,6 +9,7 @@ from CountdownTimer import CountdownTimer
 from VideoGet import VideoGet
 from UI import UI
 from RobotTracker import RobotTracker
+from ReplayGetter import ReplayGetter
 
 
 
@@ -33,12 +34,13 @@ robot_tracker = RobotTracker()
 rec_mgr = RecordingManager()
 
 webcam = VideoGet(source).start()
+replay_getter = ReplayGetter()
 
 ui = UI()
 ui.root.protocol("WM_DELETE_WINDOW", onClose)
 
 countdown_timer = CountdownTimer(ui, countdown_time)
-ui.init(webcam, countdown_timer, rec_mgr, robot_tracker)
-ui.show_frame(webcam)
+ui.init(webcam, countdown_timer, rec_mgr, robot_tracker, replay_getter)
+ui.show_frame_loop(webcam, replay_getter)
 
 ui.root.mainloop()

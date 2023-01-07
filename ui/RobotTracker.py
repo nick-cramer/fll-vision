@@ -1,6 +1,6 @@
 from threading import Thread
 import cv2
-import time
+import numpy as np
 
 class RobotTracker:
     """
@@ -25,6 +25,8 @@ class RobotTracker:
         xa = max(0, self.center[0] - self.padding)
         xb = max(0, self.center[0] + self.padding)
         return frame[ya : yb, xa : xb]
+        #frame = np.zeros((400, 400, 3), dtype='uint8')
+        #return frame
 
     def crop_to_robot(self, frame, video_getter):
         #print("Crop: " + str(video_getter.cx) + ", " + str(video_getter.cy) + ", " + str(video_getter.hzb))
